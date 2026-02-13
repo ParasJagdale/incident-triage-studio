@@ -1,0 +1,37 @@
+{
+  "name": "incident-triage-studio",
+  "version": "1.0.0",
+  "description": "Archestra MCP Server for Incident Triage",
+  "type": "mcp-server",
+  "endpoint": "http://host.docker.internal:4100/mcp",
+  "transport": {
+    "type": "streamable-http",
+    "protocol": "http",
+    "path": "/mcp",
+    "methods": ["POST"]
+  },
+  "healthCheck": {
+    "enabled": true,
+    "endpoint": "http://host.docker.internal:4100/health",
+    "method": "GET",
+    "interval": 30000,
+    "timeout": 5000
+  },
+  "tools": [
+    {
+      "name": "triage_incident",
+      "description": "Analyze CI/CD logs and generate incident report with severity, root cause, recommended actions, and mock integration payloads",
+      "category": "devops-analysis",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "logText": {
+            "type": "string",
+            "description": "CI/CD pipeline logs or error output to analyze"
+          }
+        },
+        "required": ["logText"]
+      }
+    }
+  ]
+}

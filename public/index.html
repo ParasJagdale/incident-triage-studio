@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Incident Triage Studio</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Offline Demo</p>
+          <h1>Incident Triage Studio</h1>
+          <p class="subtitle">
+            Paste CI logs and get severity, root cause, fix steps, and mock
+            issue payloads. No tokens required.
+          </p>
+        </div>
+        <div class="badge">Mock Integrations</div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <label for="logText">CI/CD Logs</label>
+          <textarea
+            id="logText"
+            rows="12"
+            placeholder="Paste logs here..."
+          ></textarea>
+          <div class="actions">
+            <button id="analyzeBtn">Analyze</button>
+            <button id="sampleBtn" class="ghost">Load sample</button>
+          </div>
+          <p id="error" class="error"></p>
+        </div>
+
+        <div class="panel">
+          <h2>Incident Report</h2>
+          <div class="report">
+            <div class="row">
+              <span>Severity</span>
+              <strong id="severity">-</strong>
+            </div>
+            <div class="row">
+              <span>Root Cause</span>
+              <strong id="rootCause">-</strong>
+            </div>
+            <div>
+              <span>Recommended Actions</span>
+              <ul id="actions"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <h2>Mock GitHub Issue</h2>
+          <pre id="mockIssue" class="code">{}</pre>
+        </div>
+        <div class="panel">
+          <h2>Mock Slack Alert</h2>
+          <pre id="mockAlert" class="code">{}</pre>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
