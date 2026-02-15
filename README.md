@@ -141,10 +141,12 @@ docker-compose up -d
 #### Option 3: Vercel (Recommended for Fast 2 MCP)
 
 **Step 1: Create Vercel Account**
+
 - Go to [vercel.com](https://vercel.com)
 - Sign up with GitHub account (recommended)
 
 **Step 2: Install Vercel CLI**
+
 ```bash
 npm install -g vercel
 ```
@@ -152,6 +154,7 @@ npm install -g vercel
 **Step 3: Configure for Vercel**
 
 Create a `vercel.json` file in the root directory:
+
 ```json
 {
   "name": "incident-triage-studio",
@@ -171,27 +174,28 @@ Create a `vercel.json` file in the root directory:
 **Step 4: Update package.json for Vercel**
 
 Vercel serverless functions need a handler. Create `api/handler.js`:
+
 ```javascript
-import { spawn } from 'child_process';
+import { spawn } from "child_process";
 
 export default async (req, res) => {
-  if (req.method === 'POST' && req.url === '/mcp') {
+  if (req.method === "POST" && req.url === "/mcp") {
     // Forward MCP requests to local server
     try {
-      const response = await fetch('http://localhost:4100/mcp', {
-        method: 'POST',
+      const response = await fetch("http://localhost:4100/mcp", {
+        method: "POST",
         headers: req.headers,
-        body: JSON.stringify(req.body)
+        body: JSON.stringify(req.body),
       });
       const data = await response.json();
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
-  } else if (req.url === '/health') {
-    res.status(200).json({ status: 'ok' });
+  } else if (req.url === "/health") {
+    res.status(200).json({ status: "ok" });
   } else {
-    res.status(404).json({ error: 'Not found' });
+    res.status(404).json({ error: "Not found" });
   }
 };
 ```
@@ -199,6 +203,7 @@ export default async (req, res) => {
 **Step 5: Deploy to Vercel**
 
 Option A - Using CLI (Recommended):
+
 ```bash
 # Login to Vercel
 vercel login
@@ -213,6 +218,7 @@ vercel
 ```
 
 Option B - Using Git (Automatic):
+
 ```bash
 # Push to GitHub
 git push origin main
@@ -226,12 +232,14 @@ git push origin main
 
 1. After deployment, you'll get a URL like: `https://incident-triage-studio-abc123.vercel.app`
 2. Test the health endpoint:
+
 ```bash
 curl https://incident-triage-studio-abc123.vercel.app/health
 # Expected: { "status": "ok" }
 ```
 
 3. Test the MCP endpoint:
+
 ```bash
 curl -X POST https://incident-triage-studio-abc123.vercel.app/mcp \
   -H "Content-Type: application/json" \
@@ -241,11 +249,13 @@ curl -X POST https://incident-triage-studio-abc123.vercel.app/mcp \
 **Step 7: Get Your Deployment URL**
 
 Your public URL for hackathon submission:
+
 ```
 https://incident-triage-studio-abc123.vercel.app
 ```
 
 Copy this URL to use in:
+
 - Hackathon submission form
 - Archestra configuration
 - README documentation

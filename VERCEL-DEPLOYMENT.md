@@ -38,6 +38,7 @@ git push origin main
 ### Step 4: Configure Project
 
 Vercel auto-detects settings, but verify:
+
 - **Framework Preset**: Node.js
 - **Build Command**: `npm install` (should auto-fill)
 - **Output Directory**: (leave blank)
@@ -83,6 +84,7 @@ vercel
 ### Step 4: Get Your URL
 
 After deployment completes:
+
 ```
 ✓ Deployed to https://incident-triage-studio-abc123.vercel.app
 ```
@@ -98,6 +100,7 @@ curl https://incident-triage-studio-abc123.vercel.app/api/health
 ```
 
 Expected response:
+
 ```json
 {
   "status": "ok",
@@ -122,6 +125,7 @@ curl -X POST https://incident-triage-studio-abc123.vercel.app/api/mcp \
 ```
 
 Expected response:
+
 ```json
 {
   "incidentId": "INC-1707998400000",
@@ -164,6 +168,7 @@ Health Check: https://incident-triage-studio-abc123.vercel.app/api/health
 ### 3. Test in Agent
 
 In Archestra chat, try:
+
 ```
 Analyze this error:
 ERROR: Cannot find module 'express'
@@ -177,11 +182,13 @@ FAILED: Build exited with code 1
 ### Deployment Failed
 
 **Check build logs:**
+
 ```bash
 vercel logs https://incident-triage-studio-abc123.vercel.app
 ```
 
 **Common issues:**
+
 - Missing dependencies → Run `npm install` locally first
 - Node version mismatch → Verify `package.json` has `"engines": { "node": ">=20" }`
 - Port already in use → Vercel handles this automatically
@@ -223,8 +230,9 @@ https://incident-triage-studio-abc123.vercel.app
 ```
 
 Use this in:
+
 - ✅ Hackathon submission form
-- ✅ Archestra tool configuration  
+- ✅ Archestra tool configuration
 - ✅ README (update with your actual URL)
 - ✅ Video demo (show domain in browser)
 
