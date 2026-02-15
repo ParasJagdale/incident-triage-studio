@@ -2,10 +2,10 @@
   "name": "incident-triage-studio",
   "version": "1.0.0",
   "description": "MCP-based incident triage for Archestra",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "start": "node mcp-server.js",
-    "ui": "node ui-server.js"
+    "dev": "node mcp-server.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
