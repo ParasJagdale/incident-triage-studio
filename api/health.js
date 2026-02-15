@@ -5,13 +5,11 @@ module.exports = function handler(req, res) {
   res.setHeader("Content-Type", "application/json");
 
   res.status(200).json({
-    status: "ok",
-    service: "Incident Triage Studio",
-    version: "1.0.0",
-    timestamp: new Date().toISOString(),
+    message: "Incident Triage Studio",
+    status: "healthy",
     endpoints: {
-      mcp: "/api/mcp",
       health: "/api/health",
+      mcp: "/api/mcp",
     },
   });
 };
