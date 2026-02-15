@@ -138,15 +138,117 @@ docker-compose up -d
 4. Railway auto-detects Node.js and deploys
 5. Get your deployment URL from the dashboard
 
-#### Option 3: Vercel
+#### Option 3: Vercel (Recommended for Fast 2 MCP)
 
+**Step 1: Create Vercel Account**
+- Go to [vercel.com](https://vercel.com)
+- Sign up with GitHub account (recommended)
+
+**Step 2: Install Vercel CLI**
 ```bash
-# Install Vercel CLI
 npm install -g vercel
+```
+
+**Step 3: Configure for Vercel**
+
+Create a `vercel.json` file in the root directory:
+```json
+{
+  "name": "incident-triage-studio",
+  "version": 2,
+  "buildCommand": "npm install",
+  "env": {},
+  "functions": {
+    "mcp-server.js": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  },
+  "public": true
+}
+```
+
+**Step 4: Update package.json for Vercel**
+
+Vercel serverless functions need a handler. Create `api/handler.js`:
+```javascript
+import { spawn } from 'child_process';
+
+export default async (req, res) => {
+  if (req.method === 'POST' && req.url === '/mcp') {
+    // Forward MCP requests to local server
+    try {
+      const response = await fetch('http://localhost:4100/mcp', {
+        method: 'POST',
+        headers: req.headers,
+        body: JSON.stringify(req.body)
+      });
+      const data = await response.json();
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  } else if (req.url === '/health') {
+    res.status(200).json({ status: 'ok' });
+  } else {
+    res.status(404).json({ error: 'Not found' });
+  }
+};
+```
+
+**Step 5: Deploy to Vercel**
+
+Option A - Using CLI (Recommended):
+```bash
+# Login to Vercel
+vercel login
 
 # Deploy
 vercel
+# Follow prompts:
+# - Link to existing project? No
+# - What's your project's name? incident-triage-studio
+# - In which directory is your code? ./
+# - Want to modify vercel.json? No
 ```
+
+Option B - Using Git (Automatic):
+```bash
+# Push to GitHub
+git push origin main
+
+# Go to vercel.com → New Project → Import Git Repository
+# Select your incident-triage-studio repo
+# Vercel auto-deploys on every push
+```
+
+**Step 6: Verify Deployment**
+
+1. After deployment, you'll get a URL like: `https://incident-triage-studio-abc123.vercel.app`
+2. Test the health endpoint:
+```bash
+curl https://incident-triage-studio-abc123.vercel.app/health
+# Expected: { "status": "ok" }
+```
+
+3. Test the MCP endpoint:
+```bash
+curl -X POST https://incident-triage-studio-abc123.vercel.app/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"logText": "ERROR: Module not found"}'
+```
+
+**Step 7: Get Your Deployment URL**
+
+Your public URL for hackathon submission:
+```
+https://incident-triage-studio-abc123.vercel.app
+```
+
+Copy this URL to use in:
+- Hackathon submission form
+- Archestra configuration
+- README documentation
 
 ### Health Check
 

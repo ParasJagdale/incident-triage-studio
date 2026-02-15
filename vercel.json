@@ -1,0 +1,23 @@
+{
+  "name": "incident-triage-studio",
+  "version": 2,
+  "buildCommand": "npm install",
+  "env": {},
+  "functions": {
+    "api/mcp.js": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  },
+  "public": true,
+  "rewrites": [
+    {
+      "source": "/mcp",
+      "destination": "/api/mcp"
+    },
+    {
+      "source": "/health",
+      "destination": "/api/health"
+    }
+  ]
+}
