@@ -120,6 +120,41 @@ docker-compose up -d
 # Access via http://localhost:4100
 ```
 
+### Deploy to Production
+
+#### Option 1: Render
+
+1. Push this repo to GitHub
+2. Go to [render.com](https://render.com)
+3. Create new Web Service from GitHub repo
+4. Set Start Command: `npm start`
+5. Deploy
+
+#### Option 2: Railway
+
+1. Go to [railway.app](https://railway.app)
+2. Click "New Project" → Deploy from GitHub Repo
+3. Select this repository
+4. Railway auto-detects Node.js and deploys
+5. Get your deployment URL from the dashboard
+
+#### Option 3: Vercel
+
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Deploy
+vercel
+```
+
+### Health Check
+
+```bash
+curl http://localhost:4100/health
+# Expected response: { "status": "ok" }
+```
+
 ### Configure in Archestra
 
 1. Add MCP Server:
@@ -199,14 +234,20 @@ FAILED: Build process exited with code 1
 
 ```
 incident-triage-studio/
-├── mcp-server.js          # Main MCP server implementation
-├── package.json           # Dependencies & scripts
-├── Dockerfile             # Container image
-├── docker-compose.yml     # Orchestration config
-├── deploy.sh              # Deployment automation
-├── start-monitor.sh       # Auto-restart monitor
-├── archestra-config.json  # MCP server metadata
-└── README.md              # This file
+├── mcp-server.js              # Main MCP server implementation
+├── package.json               # Dependencies & scripts
+├── package-lock.json          # Locked dependency versions
+├── Dockerfile                 # Container image
+├── docker-compose.yml         # Docker compose orchestration
+├── archestra-config.json      # MCP server metadata for Archestra
+├── LICENSE                    # MIT License
+├── README.md                  # This file
+├── HACKATHON-SUBMISSION.md    # Submission form template
+├── VIDEO-SCRIPT.md            # Video demo script
+└── public/                    # Frontend UI files
+    ├── index.html
+    ├── app.js
+    └── styles.css
 ```
 
 ## 🏆 Why This Project Stands Out
@@ -216,6 +257,55 @@ incident-triage-studio/
 3. **Production Ready**: Docker deployment, health checks, error handling
 4. **Extensible**: Easy to add new tools (deployment, rollback, scaling)
 5. **Demo-Friendly**: Clear inputs/outputs, visible AI decision-making
+
+## Tools
+
+### `triage_incident`
+
+**Input**:
+
+- `logText` (string): CI/CD logs or error output
+
+**Output**:
+
+- Severity classification
+- Root cause extraction
+- Recommended actions
+- Mock GitHub issue payload
+- Mock Slack alert payload
+
+## 🔧 Troubleshooting
+
+**Server won't start**
+
+```bash
+# Check port 4100 is available
+lsof -i :4100
+# Kill process if needed: kill -9 <PID>
+```
+
+**Module not found error**
+
+```bash
+# Reinstall dependencies
+rm -rf node_modules package-lock.json
+npm install
+```
+
+**Docker build fails**
+
+```bash
+# Clear Docker cache and rebuild
+docker-compose down
+docker system prune -f
+docker-compose up -d --build
+```
+
+**Health check returns error**
+
+- Ensure server started without errors
+- Check `npm start` output for stacktraces
+- Verify Node.js version >= 20
 
 ## 📝 License
 
