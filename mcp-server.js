@@ -236,6 +236,44 @@ app.get("/health", (req, res) => {
   });
 });
 
+app.post("/api/triage", (req, res) => {
+  const { logText } = req.body;
+
+  if (!logText || typeof logText !== "string" || logText.trim().length === 0) {
+    return res.status(400).json({
+      error: "Invalid request: logText is required",
+    });
+  }
+
+  try {
+    const lines = logText.split("\n").filter((l) => l.trim().length > 0);
+    const severity = classifySeverity(logText);
+    const rootCause = extractRootCause(lines);
+    const actions = suggestActions(severity, logText);
+
+    const githubIssue = buildGitHubIssue(
+      severity,
+      rootCause,
+      lines.slice(0, 10).join("\n"),
+    );
+    const slackAlert = buildSlackAlert(severity, rootCause);
+
+    res.json({
+      severity,
+      rootCause,
+      suggestedActions: actions,
+      github: githubIssue,
+      slack: slackAlert,
+    });
+  } catch (error) {
+    logger.error("Error in /api/triage", { error: error.message });
+    res.status(500).json({
+      error: "Error analyzing logs",
+      message: error.message,
+    });
+  }
+});
+
 app.post("/mcp", (req, res) => {
   transport.handleRequest(req, res, req.body);
 });
@@ -247,6 +285,7 @@ app.get("/", (req, res) => {
     endpoints: {
       mcp: "POST /mcp",
       health: "GET /health",
+      triage: "POST /api/triage (HTTP JSON endpoint for UI)",
     },
     tools: ["triage_incident"],
   });

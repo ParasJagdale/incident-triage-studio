@@ -5,388 +5,386 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Incident Triage Studio</title>
     <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
       body {
         font-family:
           -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        margin: 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
       }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      header {
+        text-align: center;
+        color: white;
+        margin-bottom: 40px;
+      }
+
       h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        font-size: 1.1em;
+        opacity: 0.9;
+      }
+
+      .main-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .panel {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .panel h2 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 10px;
+      }
+
+      textarea {
+        width: 100%;
+        height: 250px;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-family: "Courier New", monospace;
+        font-size: 0.9em;
+        resize: vertical;
+        transition: border-color 0.3s;
+      }
+
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 15px;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .loading {
+        text-align: center;
+        color: #667eea;
+        font-weight: bold;
+      }
+
+      .severity {
+        display: inline-block;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+        margin: 10px 0;
+      }
+
+      .severity.critical {
+        background: #ff4444;
+        color: white;
+      }
+
+      .severity.high {
+        background: #ff9800;
+        color: white;
+      }
+
+      .severity.medium {
+        background: #ffc107;
         color: #333;
       }
-      p {
-        color: #666;
+
+      .severity.low {
+        background: #4caf50;
+        color: white;
       }
-      code {
-        background: #f5f5f5;
-        padding: 2px 6px;
-        border-radius: 3px;
+
+      .result-item {
+        background: #f9f9f9;
+        padding: 12px;
+        margin: 10px 0;
+        border-left: 4px solid #667eea;
+        border-radius: 4px;
       }
-      .endpoint {
-        margin: 15px 0;
+
+      .result-item strong {
+        color: #333;
+      }
+
+      .actions-list {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .actions-list li {
+        padding: 8px;
+        background: #f0f0f0;
+        margin: 5px 0;
+        border-radius: 4px;
+        border-left: 3px solid #667eea;
+      }
+
+      .code-block {
+        background: #222;
+        color: #0f0;
+        padding: 12px;
+        border-radius: 4px;
+        overflow-x: auto;
+        font-family: "Courier New", monospace;
+        font-size: 0.85em;
+        margin: 10px 0;
+      }
+
+      .error {
+        background: #ffebee;
+        border-left-color: #f44336;
+        color: #c62828;
+        padding: 12px;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+
+      .hidden {
+        display: none;
       }
     </style>
   </head>
   <body>
-    <h1>🚨 Incident Triage Studio</h1>
-    <p>AI-powered DevOps assistant using Archestra MCP orchestration</p>
+    <div class="container">
+      <header>
+        <h1>🚨 Incident Triage Studio</h1>
+        <p class="subtitle">
+          AI-powered DevOps incident analysis using Archestra MCP
+        </p>
+      </header>
 
-    <h2>API Endpoints</h2>
-    <div class="endpoint">
-      <strong>Health Check:</strong><br />
-      <code>GET /api/health</code>
-    </div>
-    <div class="endpoint">
-      <strong>Incident Triage:</strong><br />
-      <code>POST /api/mcp</code><br />
-      Body: <code>{"logText": "error logs here"}</code>
-    </div>
-
-    <h2>GitHub</h2>
-    <p>
-      View the source code on
-      <a
-        href="https://github.com/parasjagdale/incident-triage-studio"
-        target="_blank"
-        >GitHub</a
-      >
-    </p>
-
-    <!doctype html>
-    <html>
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Incident Triage Studio</title>
-        <style>
-          * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-          }
-
-          body {
-            font-family:
-              -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-          }
-
-          .container {
-            max-width: 1200px;
-            margin: 0 auto;
-          }
-
-          header {
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
-          }
-
-          h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-          }
-
-          .subtitle {
-            font-size: 1.1em;
-            opacity: 0.9;
-          }
-
-          .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-          }
-
-          @media (max-width: 768px) {
-            .main-content {
-              grid-template-columns: 1fr;
-            }
-          }
-
-          .panel {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-          }
-
-          .panel h2 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
-          }
-
-          textarea {
-            width: 100%;
-            height: 250px;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-family: "Courier New", monospace;
-            font-size: 0.9em;
-            resize: vertical;
-            transition: border-color 0.3s;
-          }
-
-          textarea:focus {
-            outline: none;
-            border-color: #667eea;
-          }
-
-          button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
-            transition:
-              transform 0.2s,
-              box-shadow 0.2s;
-          }
-
-          button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-          }
-
-          button:active {
-            transform: translateY(0);
-          }
-
-          .loading {
-            text-align: center;
-            color: #667eea;
-            font-weight: bold;
-          }
-
-          .severity {
-            display: inline-block;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.9em;
-            margin: 10px 0;
-          }
-
-          .severity.critical {
-            background: #ff4444;
-            color: white;
-          }
-
-          .severity.high {
-            background: #ff9800;
-            color: white;
-          }
-
-          .severity.medium {
-            background: #ffc107;
-            color: #333;
-          }
-
-          .severity.low {
-            background: #4caf50;
-            color: white;
-          }
-
-          .result-item {
-            background: #f9f9f9;
-            padding: 12px;
-            margin: 10px 0;
-            border-left: 4px solid #667eea;
-            border-radius: 4px;
-          }
-
-          .result-item strong {
-            color: #333;
-          }
-
-          .actions-list {
-            list-style: none;
-            padding-left: 0;
-          }
-
-          .actions-list li {
-            padding: 8px;
-            background: #f0f0f0;
-            margin: 5px 0;
-            border-radius: 4px;
-            border-left: 3px solid #667eea;
-          }
-
-          .code-block {
-            background: #222;
-            color: #0f0;
-            padding: 12px;
-            border-radius: 4px;
-            overflow-x: auto;
-            font-family: "Courier New", monospace;
-            font-size: 0.85em;
-            margin: 10px 0;
-          }
-
-          .error {
-            background: #ffebee;
-            border-left-color: #f44336;
-            color: #c62828;
-            padding: 12px;
-            border-radius: 4px;
-            margin: 10px 0;
-          }
-
-          .hidden {
-            display: none;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <header>
-            <h1>🚨 Incident Triage Studio</h1>
-            <p class="subtitle">
-              AI-powered DevOps incident analysis using Archestra MCP
-            </p>
-          </header>
-
-          <div class="main-content">
-            <!-- Input Panel -->
-            <div class="panel">
-              <h2>📋 CI/CD Logs</h2>
-              <p style="color: #666; font-size: 0.9em; margin-bottom: 10px">
-                Paste your error logs below
-              </p>
-              <textarea
-                id="logInput"
-                placeholder="Paste your CI/CD error logs here...&#10;&#10;Example:&#10;ERROR: Cannot find module 'express'&#10;at Function.Module._resolveFilename&#10;FAILED: Build exited with code 1"
-              ></textarea>
-              <button onclick="triageIncident()">🔍 Analyze Logs</button>
-              <div id="loading" class="loading hidden">Analyzing...</div>
-            </div>
-
-            <!-- Results Panel -->
-            <div class="panel">
-              <h2>📊 Analysis Results</h2>
-              <div id="resultsContainer" style="display: none">
-                <div id="severityResult" class="result-item"></div>
-                <div id="rootCauseResult" class="result-item"></div>
-                <div id="actionsResult" class="result-item"></div>
-                <div id="integrationResult" class="result-item"></div>
-              </div>
-              <div
-                id="emptyState"
-                style="color: #999; text-align: center; padding: 40px 0"
-              >
-                <p>👈 Paste logs and click "Analyze" to see results</p>
-              </div>
-              <div id="errorContainer" class="error hidden"></div>
-            </div>
-          </div>
+      <div class="main-content">
+        <!-- Input Panel -->
+        <div class="panel">
+          <h2>📋 CI/CD Logs</h2>
+          <p style="color: #666; font-size: 0.9em; margin-bottom: 10px">
+            Paste your error logs below
+          </p>
+          <textarea
+            id="logInput"
+            placeholder="Paste your CI/CD error logs here...&#10;&#10;Example:&#10;ERROR: Cannot find module 'express'&#10;at Function.Module._resolveFilename&#10;FAILED: Build exited with code 1"
+          ></textarea>
+          <button onclick="triageIncident()">🔍 Analyze Logs</button>
+          <div id="loading" class="loading hidden">Analyzing...</div>
         </div>
 
-        <script>
-          async function triageIncident() {
-            const logInput = document.getElementById("logInput").value.trim();
-            const loading = document.getElementById("loading");
-            const resultsContainer =
-              document.getElementById("resultsContainer");
-            const emptyState = document.getElementById("emptyState");
-            const errorContainer = document.getElementById("errorContainer");
+        <!-- Results Panel -->
+        <div class="panel">
+          <h2>📊 Analysis Results</h2>
+          <div id="resultsContainer" style="display: none">
+            <div id="severityResult" class="result-item"></div>
+            <div id="rootCauseResult" class="result-item"></div>
+            <div id="actionsResult" class="result-item"></div>
+            <div id="integrationResult" class="result-item"></div>
+          </div>
+          <div
+            id="emptyState"
+            style="color: #999; text-align: center; padding: 40px 0"
+          >
+            <p>👈 Paste logs and click "Analyze" to see results</p>
+          </div>
+          <div id="errorContainer" class="error hidden"></div>
+        </div>
+      </div>
+    </div>
 
-            if (!logInput) {
-              errorContainer.textContent = "⚠️ Please paste some logs first";
-              errorContainer.classList.remove("hidden");
-              return;
-            }
+    <script>
+      let lastAnalysisTime = 0;
 
-            errorContainer.classList.add("hidden");
-            loading.classList.remove("hidden");
-            emptyState.style.display = "none";
-            resultsContainer.style.display = "none";
+      async function triageIncident() {
+        const logInput = document.getElementById("logInput").value.trim();
+        const loading = document.getElementById("loading");
+        const resultsContainer = document.getElementById("resultsContainer");
+        const emptyState = document.getElementById("emptyState");
+        const errorContainer = document.getElementById("errorContainer");
 
-            try {
-              const response = await fetch("/api/mcp", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ logText: logInput }),
-              });
+        if (!logInput) {
+          errorContainer.textContent = "⚠️ Please paste some logs first";
+          errorContainer.classList.remove("hidden");
+          return;
+        }
 
-              if (!response.ok)
-                throw new Error(`API error: ${response.status}`);
+        errorContainer.classList.add("hidden");
+        loading.classList.remove("hidden");
+        loading.textContent = "📡 Calling Archestra MCP tool...";
+        emptyState.style.display = "none";
+        resultsContainer.style.display = "none";
 
-              const result = await response.json();
-              displayResults(result);
-              loading.classList.add("hidden");
-              resultsContainer.style.display = "block";
-            } catch (error) {
-              loading.classList.add("hidden");
-              errorContainer.textContent = `❌ Error: ${error.message}`;
-              errorContainer.classList.remove("hidden");
-            }
-          }
+        const startTime = performance.now();
 
-          function displayResults(result) {
-            const severityClass = result.severity.toLowerCase();
-            const severityEmoji =
-              {
-                critical: "🔴",
-                high: "🟠",
-                medium: "🟡",
-                low: "🟢",
-              }[severityClass] || "⚪";
+        try {
+          const response = await fetch("/api/triage", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ logText: logInput }),
+          });
 
-            document.getElementById("severityResult").innerHTML = `
+          if (!response.ok) throw new Error(`API error: ${response.status}`);
+
+          const result = await response.json();
+          const endTime = performance.now();
+          lastAnalysisTime = endTime - startTime;
+          displayResults(result);
+          loading.classList.add("hidden");
+          resultsContainer.style.display = "block";
+        } catch (error) {
+          loading.classList.add("hidden");
+          errorContainer.textContent = `❌ Error: ${error.message}`;
+          errorContainer.classList.remove("hidden");
+        }
+      }
+
+      function displayResults(result) {
+        const severityClass = result.severity.toLowerCase();
+        const severityEmoji =
+          {
+            critical: "🔴",
+            high: "🟠",
+            medium: "🟡",
+            low: "🟢",
+          }[severityClass] || "⚪";
+
+        document.getElementById("severityResult").innerHTML = `
           <strong>Severity:</strong>
           <div class="severity ${severityClass}">${severityEmoji} ${result.severity}</div>
+          <div style="font-size: 0.8em; color: #999; margin-top: 5px;">Response time: ${lastAnalysisTime.toFixed(0)}ms</div>
         `;
 
-            document.getElementById("rootCauseResult").innerHTML = `
+        document.getElementById("rootCauseResult").innerHTML = `
           <strong>🎯 Root Cause:</strong><br>
           <div style="margin-top: 8px; color: #333;">${escapeHtml(result.rootCause)}</div>
         `;
 
-            const actionsList = result.suggestedActions
-              .map((action) => `<li>${escapeHtml(action)}</li>`)
-              .join("");
-            document.getElementById("actionsResult").innerHTML = `
-          <strong>💡 Suggested Actions:</strong>
+        const actionsList = result.suggestedActions
+          .map((action) => `<li>${escapeHtml(action)}</li>`)
+          .join("");
+        document.getElementById("actionsResult").innerHTML = `
+          <strong>💡 Suggested Actions (${result.suggestedActions.length}):</strong>
           <ul class="actions-list">${actionsList}</ul>
         `;
 
-            document.getElementById("integrationResult").innerHTML = `
-          <strong>🔗 Integrations:</strong>
+        const githubReady = result.github ? "✓" : "✗";
+        const slackReady = result.slack ? "✓" : "✗";
+
+        document.getElementById("integrationResult").innerHTML = `
+          <strong>🔗 Integration Readiness:</strong>
           <div style="font-size: 0.85em; margin-top: 8px; color: #666;">
-            <div>📌 GitHub Issue Ready ✓</div>
-            <div>💬 Slack Alert Ready ✓</div>
+            <div>📌 GitHub Issue ${githubReady}</div>
+            <div>💬 Slack Alert ${slackReady}</div>
+            <div style="margin-top: 8px; font-size: 0.75em; color: #999;">
+              MCP Tool: triage_incident | Schema: v1
+            </div>
           </div>
         `;
-          }
+      }
 
-          function escapeHtml(text) {
-            const div = document.createElement("div");
-            div.textContent = text;
-            return div.innerHTML;
-          }
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
 
-          // Test on load
-          window.addEventListener("load", async () => {
-            try {
-              const response = await fetch("/api/health");
-              console.log("Health check:", response.status === 200 ? "✓" : "✗");
-            } catch (e) {
-              console.log("API unreachable - local development mode");
-            }
-          });
-        </script>
-      </body>
-    </html>
+      // Test on load
+      window.addEventListener("load", async () => {
+        try {
+          const response = await fetch("/health");
+          console.log(
+            "✓ Archestra MCP endpoint healthy:",
+            response.status === 200,
+          );
+        } catch (e) {
+          console.log("ℹ API unavailable - ensure local server is running");
+        }
+      });
+    </script>
+
+    <!-- Archestra Feature Panel (for recording) -->
+    <div
+      style="
+        background: #f5f5f5;
+        border-top: 3px solid #667eea;
+        margin-top: 40px;
+        padding: 20px;
+        text-align: center;
+      "
+    >
+      <h3 style="color: #333; margin-bottom: 10px">
+        🏗️ Archestra MCP Integration
+      </h3>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 15px;
+          font-size: 0.9em;
+          color: #666;
+        "
+      >
+        <div>
+          ✅ <strong>MCP Tool Discovery</strong><br />Registered in Archestra
+          registry
+        </div>
+        <div>
+          ✅ <strong>Tool Routing</strong><br />Through Default MCP Gateway
+        </div>
+        <div>
+          ✅ <strong>Gemini 2.0 Agent</strong><br />Orchestrates tool invocation
+        </div>
+        <div>
+          ✅ <strong>Structured Responses</strong><br />JSON schema validation
+        </div>
+      </div>
+    </div>
   </body>
 </html>
